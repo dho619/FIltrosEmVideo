@@ -9,6 +9,21 @@ import cv2
 # images are represented as a multi-dimensional NumPy array with
 # shape no. rows (height) x no. columns (width) x no. channels (depth)
 image = cv2.imread("jp.png")
+
+output = image.copy()
+#cv2.rectangle(output, (320, 60), (420, 160), (0, 0, 255), 2)
+cv2.rectangle(output, (380, 260), (200, 160), (0, 0, 255), 2)
+cv2.imshow("Rectangle", output)
+cv2.waitKey(0)
+
+output = image.copy()
+#cv2.rectangle(output, (320, 60), (420, 160), (0, 0, 255), 2)
+cv2.rectangle(output, (380, 260), (400, 160), (0, 0, 255), 2)
+cv2.imshow("Rectangle 2", output)
+cv2.waitKey(0)
+
+exit()
+
 (h, w, d) = image.shape
 print("width={}, height={}, depth={}".format(w, h, d))
 
