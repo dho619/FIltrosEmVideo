@@ -6,11 +6,14 @@ import argparse, dlib, cv2, sys, os
 #Processar Video
 def processando_video(video, output, skip):
     vs = cv2.VideoCapture(video)
+    (width, height) = int(vs.get(3)), int(vs.get(4))
+    fps = int(vs.get(5))
+    fourcc = cv2.VideoWriter_fourcc(*args["codec"])
+    new_video = cv2.VideoWriter(output, fourcc, fps, (width, height), True)
     read = 0
-    processed = 0
 
-    #len_folder = len(os.listdir(output))
-
+    print('Processando video, isso pode demorar um pouco, aguarde por favor...')
+    #Detectando os rostos na imagens
     while True:
         (sucess, frame) = vs.read()
 
@@ -19,16 +22,37 @@ def processando_video(video, output, skip):
 
         read += 1
 
-        if read != 0 and read % skip != 0:#o numero de pulos antes de fazer outra deteccao
-            continue
+        if read == 1 or read % skip == 0:#o numero de pulos antes de fazer outra deteccao
+            faces = acha_face(frame)
 
-        pathSave = "VideoNew.png"#os.path.sep.join([output,"VideoNew.png"])
+        face_image = frame.copy()
+        for (_, face) in enumerate(faces):
+            l_x = int(face.tl_corner().x)
+            t_y = int(face.tl_corner().y)
+            r_x = int(face.br_corner().x)
+            b_y = int(face.br_corner().y)
 
-        show_result(frame, pathSave)
-        processed +=1
+            cv2.rectangle(face_image, (l_x, t_y), (r_x, b_y), (0, 0, 255), 2)
+
+        new_video.write(face_image)
 
     vs.release()
+    new_video.release()
+    input('De enter para continuar...')
+
+    vs = cv2.VideoCapture(output)
+    vs.set(1, 0)
+    while True:
+        (sucess, frame) = vs.read()
+
+        if not sucess:#se nao conseguiu ler
+            break
+        cv2.imshow('Exibicao do Resultado',frame)
+        cv2.waitKey(30)
+
     cv2.destroyAllWindows()
+
+
 
 #Processar Imagem
 def processando_imagem(imagem, output):
@@ -36,45 +60,30 @@ def processando_imagem(imagem, output):
         print('Nao foi possivel ler a Imagem "{}", por favor, tente novamente!'.format(path_image))
         sys.exit()
 
-    pathSave = 'ImagemFace.png'#os.path.sep.join([output,"ImagemFace.png"])
-
-    show_result(cv2.imread(imagem), pathSave)
+    acha_face(cv2.imread(imagem))
+    if output:
+        print('Aqui vai salvar a imagem: {}'.format(output))
 
 #rodar a imagem em 90graus n vezes (times, define o numero de vezes)
 def rotate(image, times=1):
     return np.rot90(image, times)
 
-def show_result(frame, output, verbose=False):
+def acha_face(frame, verbose=False):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     detector = dlib.get_frontal_face_detector()
     rects = detector(gray, 0)#tenta achar o rosto da forma que esta
 
     i=1
-    '''
+
     #tenta achar o rosto em outras rotacoes
     while len(rects) is 0 and i<4:
         gray = rotate(gray, 1)
         frame = rotate(frame, 1)#rotaciona o frame, para poder pegar o rosto na posicao certa depois
         rects = detector(gray, 0)
         i+=1
-    '''
-    face_image = frame.copy()
-    for (_, rect) in enumerate(rects):
-        l_x = int(rect.tl_corner().x)
-        t_y = int(rect.tl_corner().y)
-        r_x = int(rect.br_corner().x)
-        b_y = int(rect.br_corner().y)
 
-        #face_image = frame[t_y:b_y , l_x:r_x, :]
-        cv2.rectangle(face_image, (l_x, t_y), (r_x, b_y), (0, 0, 255), 2)
-
-    #cv2.imwrite(output, face_image)
-    cv2.imshow('Exibicao do Resultado',face_image)
-    cv2.waitKey(1)
-
-    if verbose:
-        print["[INFO] saved {}".format(path)]
+    return rects
 
 ############################################################################
 ############################################################################
@@ -93,6 +102,7 @@ ap.add_argument("-v", "--path_video", type=str, required=False, help="Caminho de
 ap.add_argument("-i", "--path_imagem", type=str, required=False, help="Pasta com a imagem")
 ap.add_argument("-o", "--output", type=str, required=False, help="Diretorio para onde vai a saida, caso seja passado")
 ap.add_argument("-s", "--skip", type=int, default=5, help="Numero de frames que deve pular entre cada aplicação de detecção de face.")
+ap.add_argument("-c", "--codec", type=str, default="MJPG", help="codec para a saida do video")
 args = vars(ap.parse_args())
 
 if not args["path_video"] and not args["path_imagem"]:
@@ -104,7 +114,11 @@ if args["output"]:
     path.mkdir(parents=True, exist_ok=True)
 
 if args["path_video"]:
-    processando_video(args["path_video"], args["output"], args["skip"])
+    i = 0
+    saida = '_' + args["path_video"]
+    processando_video(args["path_video"], saida[:-4]+'.avi', args["skip"])
+
+
 
 if args["path_imagem"]:
     processando_imagem(args["path_imagem"], args["output"])
