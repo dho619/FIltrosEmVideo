@@ -1,5 +1,5 @@
 # FiltrosEmVideo
-Trabalho de Processamento de Imagem - Filtros em um video
+Trabalho de Processamento de Imagem - Filtros em um video e Reconhecimento de face com openCV e Dlib
 
 
 Codecs:
