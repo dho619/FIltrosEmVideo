@@ -1,14 +1,15 @@
 from pathlib import Path
 import numpy as np
-import argparse, dlib, cv2, sys, os
+import dlib, cv2, os
 from datetime import datetime
+from sys import exit
 
 #Processar Video
-def processando_video(video, tempdest, skip):
+def processando_video(video, tempdest, skip, codec):
     vs = cv2.VideoCapture(video) #abrindo video
     (width, height) = int(vs.get(3)), int(vs.get(4)) #pegando largura e altura
     fps = int(vs.get(5)) #pegando numero de fps
-    fourcc = cv2.VideoWriter_fourcc(*args["codec"])#pegando codec
+    fourcc = cv2.VideoWriter_fourcc(*codec)#pegando codec
     new_video = cv2.VideoWriter(tempdest, fourcc, fps, (width, height), True) #criando novo arquivo de video com largura, altura e fps do original
     read = 0
 
@@ -43,7 +44,7 @@ def processando_video(video, tempdest, skip):
 def processando_imagem(imagem, output):
     if not os.path.isfile(imagem):
         print('Nao foi possivel ler a Imagem "{}", por favor, tente novamente!'.format(path_image))
-        sys.exit()
+        exit()
 
     pathImage = cv2.imread(imagem)
 
@@ -56,7 +57,7 @@ def processando_imagem(imagem, output):
     cv2.waitKey(0)
 
     if output:
-        saveImage(face_image, output)
+        saveImage(face_image, output, imagem)
 
 #Desenhar os retangulos
 def drawRectangles(imagem, faces, faces2):
@@ -91,8 +92,9 @@ def showVideo(output):
 #salvar video
 def saveVideo(video, destino):
     pathVideo= args["path_video"]
-    ext = pathVideo.index('.')
-    nomeVideo = pathVideo[:ext]
+    ext = pathImage.rfind('.') #posicao do ultimo ponto, que e a extencao do arquivo
+    barra = pathImage.rfind('/') + 1 #posicao da ultima barra
+    nomeVideo = pathVideo[barra:ext] #nome do video
     today = datetime.now()
     diahora = '{}{}{}_{}{}{}'.format(today.day, today.month, today.year, today.hour, today.minute,today.second)
     newLocal = os.path.sep.join([os.getcwd() + '/' + destino, "{}-{}.avi".format(nomeVideo,diahora)])
@@ -103,12 +105,20 @@ def saveVideo(video, destino):
         print('Nao foi possivel salvar o video, tente novamente!')
 
 #salvar imagem
-def saveImage(image, destino):
-    pathImage = args["path_image"]
-    ext = pathImage.index('.')
-    nameImage = pathImage[:ext]
+def saveImage(image, destino, pathImage):
+    ext = pathImage.rfind('.') #posicao do ultimo ponto, que e a extencao do arquivo
+    barra = pathImage.rfind('/') + 1 #posicao da ultima barra
+    if barra == -1:#caso nao ache barra, barra recebe a posicao 0
+        barra = 0
+    nameImage = pathImage[barra:ext] #pega so o nome da imagem
+
     today = datetime.now()
     diahora = '{}{}{}_{}{}{}'.format(today.day, today.month, today.year, today.hour, today.minute,today.second)
+    #NAO TA FUNCIONANDO OS IFS A FRENTE
+    if destino[0] == '.':#tirar . do comeco
+        destino = destino[1:]
+    if destino[0] == '/': #tirar / do comeco
+        destino = destino[1:]
     local = os.path.sep.join([os.getcwd() + '/' + destino, "{}-{}.png".format(nameImage,diahora)])
     try:
         cv2.imwrite(local, image)
@@ -161,3 +171,5 @@ def acha_face_OpenCV(frame, verbose=False):
         minSize=(30, 30),
         flags = cv2.CASCADE_SCALE_IMAGE
     )
+
+    return faces
