@@ -3,6 +3,7 @@ import argparse, sys, os
 
 from funcoes import processando_video, processando_imagem
 
+#CRIANDO A APRESENTACAO DO HELP DO PROGRAMA
 ap = argparse.ArgumentParser(
     prog='Detecção de Face',
      description='''Esse é um programa de detecção de faces, criado com a biblioteca dlib e opencv
@@ -15,6 +16,7 @@ ap = argparse.ArgumentParser(
      formatter_class=argparse.ArgumentDefaultsHelpFormatter
 )
 
+#PASSANDO ARGUMENTOS SUPORTADOS
 ap.add_argument("-v", "--path_video", type=str, required=False, help="Caminho de onde esta o vídeo")
 ap.add_argument("-i", "--path_image", type=str, required=False, help="Pasta com a imagem")
 ap.add_argument("-o", "--output", type=str, required=False, help="Diretorio para onde vai a saida, caso seja passado")
@@ -22,10 +24,12 @@ ap.add_argument("-s", "--skip", type=int, default=5, help="Numero de frames que 
 ap.add_argument("-c", "--codec", type=str, default="MJPG", help="codec para a saida do video")
 args = vars(ap.parse_args())
 
+#SE NAO TEM CAMINHO DE VIDEO E NEM IMAGEM, SAI DO PROGRAMA
 if not args["path_video"] and not args["path_image"]:
     print('Video ou imagem sao nescessarios!')
     sys.exit()
 
+#SE TEM A SAIDA, MAS NAO A PASTA
 if args["output"]:
     path = Path(args["output"])
     path.mkdir(parents=True, exist_ok=True)
@@ -38,7 +42,6 @@ if args["path_video"]:
     pathOutput = os.path.sep.join(['./temp', "temp.avi"])
 
     processando_video(args["path_video"], pathOutput, args["skip"], args["codec"], args["output"])
-
 
 
 if args["path_image"]:
