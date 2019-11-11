@@ -5,7 +5,7 @@ from datetime import datetime
 from sys import exit
 
 #Processar Video
-def processando_video(video, tempdest, skip, codec):
+def processando_video(video, tempdest, skip, codec, output):
     vs = cv2.VideoCapture(video) #abrindo video
     (width, height) = int(vs.get(3)), int(vs.get(4)) #pegando largura e altura
     fps = int(vs.get(5)) #pegando numero de fps
@@ -34,14 +34,14 @@ def processando_video(video, tempdest, skip, codec):
 
     showVideo(tempdest)
 
-    if args["output"]:
+    if output:
         print('Salvando Video...')
-        saveVideo(tempdest, args["output"])
+        saveVideo(tempdest, output, video)
 
     removeTemp()
 
 #Processar Imagem
-def processando_imagem(imagem, output):
+def processando_imagem(imagem, output=''):
     if not os.path.isfile(imagem):
         print('Nao foi possivel ler a Imagem "{}", por favor, tente novamente!'.format(path_image))
         exit()
@@ -90,16 +90,21 @@ def showVideo(output):
     cv2.destroyAllWindows()
 
 #salvar video
-def saveVideo(video, destino):
-    pathVideo= args["path_video"]
-    ext = pathImage.rfind('.') #posicao do ultimo ponto, que e a extencao do arquivo
-    barra = pathImage.rfind('/') + 1 #posicao da ultima barra
+def saveVideo(antigoCaminho, destino, video):
+    pathVideo = video
+    ext = pathVideo.rfind('.') #posicao do ultimo ponto, que e a extencao do arquivo
+    barra = pathVideo.rfind('/') + 1 #posicao da ultima barra
     nomeVideo = pathVideo[barra:ext] #nome do video
     today = datetime.now()
     diahora = '{}{}{}_{}{}{}'.format(today.day, today.month, today.year, today.hour, today.minute,today.second)
-    newLocal = os.path.sep.join([os.getcwd() + '/' + destino, "{}-{}.avi".format(nomeVideo,diahora)])
+    newDestino = destino# Faz um copia do destino
+    if newDestino[0] == '.':#tirar . do comeco
+        newDestino = newDestino[1:]
+    if newDestino[0] == '/': #tirar / do comeco
+        newDestino = newDestino[1:]
+    newLocal = os.path.sep.join([os.getcwd() + newDestino, "{}-{}.avi".format(nomeVideo,diahora)])
     try:
-        os.rename(video, newLocal)
+        os.rename(antigoCaminho, newLocal)
         print('Video foi salvo com sucesso! Local do arquivo: {}'.format(newLocal))
     except:
         print('Nao foi possivel salvar o video, tente novamente!')
@@ -114,12 +119,14 @@ def saveImage(image, destino, pathImage):
 
     today = datetime.now()
     diahora = '{}{}{}_{}{}{}'.format(today.day, today.month, today.year, today.hour, today.minute,today.second)
-    #NAO TA FUNCIONANDO OS IFS A FRENTE
-    if destino[0] == '.':#tirar . do comeco
-        destino = destino[1:]
-    if destino[0] == '/': #tirar / do comeco
-        destino = destino[1:]
-    local = os.path.sep.join([os.getcwd() + '/' + destino, "{}-{}.png".format(nameImage,diahora)])
+
+    newDestino = destino# Faz um copia do destino
+    if newDestino[0] == '.':#tirar . do comeco
+        newDestino = newDestino[1:]
+    if newDestino[0] == '/': #tirar / do comeco
+        newDestino = newDestino[1:]
+
+    local = os.path.sep.join([os.getcwd() + newDestino, "{}-{}.png".format(nameImage,diahora)])
     try:
         cv2.imwrite(local, image)
         print('A imagem foi salvo com sucesso! Local do arquivo: {}'.format(local))

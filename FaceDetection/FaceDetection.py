@@ -37,7 +37,7 @@ if args["path_video"]:
     temp.mkdir(parents=True, exist_ok=True)
     pathOutput = os.path.sep.join(['./temp', "temp.avi"])
 
-    processando_video(args["path_video"], pathOutput, args["skip"], args["codec"])
+    processando_video(args["path_video"], pathOutput, args["skip"], args["codec"], args["output"])
 
 
 
