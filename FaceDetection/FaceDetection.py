@@ -34,15 +34,19 @@ if args["output"]:
     path = Path(args["output"])
     path.mkdir(parents=True, exist_ok=True)
 
+#SE TEM UM VIDEO
 if args["path_video"]:
     i = 0
-
+    #cria uma pasta temporaria para guardar o video
     temp = Path('temp')
     temp.mkdir(parents=True, exist_ok=True)
     pathOutput = os.path.sep.join(['./temp', "temp.avi"])
+    #Chamando a funcao para processar o video
+                      #caminho do video, #destino temporario  #numero de pulos #codec         #destino permanente
+    processando_video(args["path_video"], pathOutput,         args["skip"],    args["codec"], args["output"])
 
-    processando_video(args["path_video"], pathOutput, args["skip"], args["codec"], args["output"])
-
-
+#SE TEM UMA IMAGEM
 if args["path_image"]:
+    #Chamando a funcao para processar a Imagem
+                      #caminho da Imagem   #destino da imagem
     processando_imagem(args["path_image"], args["output"])

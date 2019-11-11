@@ -1,6 +1,8 @@
 # FiltrosEmVideo
 Trabalho de Processamento de Imagem - Filtros em um video e Reconhecimento de face com openCV e Dlib
 
+#MELHORAR A PRECISAO DO OpenCV
+#COFERIR SE VAI RODAR COM VIDEO NA MESMA PASTA
 
 Codecs:
 
