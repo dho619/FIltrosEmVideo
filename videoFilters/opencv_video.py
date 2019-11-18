@@ -65,9 +65,9 @@ while(cap.isOpened()):
     if(i==960):
         break
     ret, frame = cap.read()
-    (h, w, d) = frame.shape
-    center = (w // 2, h // 2)
-    M = cv2.getRotationMatrix2D(center, 45, 1.0)
+    (h, w, d) = frame.shape #Pegando as coordenadas, altura(h), largura(w) e dimensoes(d)
+    center = (w // 2, h // 2) #Pegando o centro da imagem
+    M = cv2.getRotationMatrix2D(center, 45, 1.0) #Roda em 45 graus de acordo com o ponto passado, nesse caso o centro
     rotated = cv2.warpAffine(frame, M, (w, h))
     cv2.imshow('Rotacao do OpenCV',rotated)
     if cv2.waitKey(30) & 0xFF == ord('q'):
