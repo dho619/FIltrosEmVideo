@@ -22,8 +22,8 @@ while(cap.isOpened()):
     if(i==360):
         break
     ret, frame = cap.read()
-    resized = cv2.resize('Redimensionar Fixo', (200, 200))  #usa o opencv para redimencionar o video no tamanho passado
-    cv2.imshow(filtro,resized)
+    resized = cv2.resize(frame, (200, 200))  #usa o opencv para redimencionar o video no tamanho passado
+    cv2.imshow('Redimensionar Fixo',resized)
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
     i+=1
@@ -61,37 +61,43 @@ while(cap.isOpened()):
         break
     i+=1
 
+graus=45 #grau de rotacao no inicio
 while(cap.isOpened()):
     if(i==960):
         break
     ret, frame = cap.read()
     (h, w, d) = frame.shape #Pegando as coordenadas, altura(h), largura(w) e dimensoes(d)
     center = (w // 2, h // 2) #Pegando o centro da imagem
-    M = cv2.getRotationMatrix2D(center, 45, 1.0) #Constroi a matriz de rotacao de acordo com o ponto passado, nesse caso o centro
+    M = cv2.getRotationMatrix2D(center, graus, 1.0) #Constroi a matriz de rotacao de acordo com o ponto passado, nesse caso o centro
     rotated = cv2.warpAffine(frame, M, (w, h)) # roda a imagem usando a matriz adiquirida acima
     cv2.imshow('Rotacao do OpenCV',rotated)
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
+    graus += 1 #incrementa o grau de rotacao da imagem
     i+=1
 
+graus = 90 #grau de rotacao no inicio
 while(cap.isOpened()):
     if(i==1110):
         break
     ret, frame = cap.read()
-    rotated = imutils.rotate(frame, 90) #Rotaciona em 90graus usando o imutils
+    rotated = imutils.rotate(frame, graus) #Rotaciona em 90graus usando o imutils
     cv2.imshow('Rotacao do Imutils',rotated)
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
+    graus -= 1 #incrementa o grau de rotacao da imagem
     i+=1
 
+graus = -45 #  grau de rotacao no inicio
 while(cap.isOpened()):
     if(i==1260):
         break
     ret, frame = cap.read()
-    rotated = imutils.rotate_bound(frame, -45)# rotaciona usando o imutils com a funcao rotate_bound
+    rotated = imutils.rotate_bound(frame, graus)# rotaciona usando o imutils com a funcao rotate_bound
     cv2.imshow('Imutils Bound Rotation',rotated)# que nao deixa perder parte da imagem na rotacao
     if cv2.waitKey(30) & 0xFF == ord('q'):      # (normalmente corta as bordas em rotacoes normais)
         break
+    graus += 1
     i+=1
 
 while(cap.isOpened()):
