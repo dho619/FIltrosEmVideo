@@ -4,7 +4,7 @@ import dlib, cv2, os
 from datetime import datetime
 from sys import exit
 
-#Processar Video
+#Processar se for Video
 def processando_video(video, tempdest, skip, codec, output):
     if not os.path.isfile(video):#ve se o video existe
         print('Nao foi possivel ler a Imagem "{}", por favor, tente novamente!'.format(path_image))
@@ -44,7 +44,7 @@ def processando_video(video, tempdest, skip, codec, output):
 
     removeTemp()#remove a pasta temp e tudo que esta dentro dela
 
-#Processar Imagem
+#Processar se for Imagem
 def processando_imagem(imagem, output=''):
     if not os.path.isfile(imagem): #ve se a imagem existe
         print('Nao foi possivel ler a Imagem "{}", por favor, tente novamente!'.format(path_image))
@@ -141,7 +141,7 @@ def saveImage(image, destino, pathImage):
     except:#caso de erro
         print('Nao foi possivel salvar a imagem, tente novamente!')
 
-#remover pasta temporaria
+#remover a pasta temporaria
 def removeTemp():
     try:
         path ="./temp" #pega o caminho da pasta temporaria

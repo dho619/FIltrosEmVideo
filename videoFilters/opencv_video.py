@@ -67,8 +67,8 @@ while(cap.isOpened()):
     ret, frame = cap.read()
     (h, w, d) = frame.shape #Pegando as coordenadas, altura(h), largura(w) e dimensoes(d)
     center = (w // 2, h // 2) #Pegando o centro da imagem
-    M = cv2.getRotationMatrix2D(center, 45, 1.0) #Roda em 45 graus de acordo com o ponto passado, nesse caso o centro
-    rotated = cv2.warpAffine(frame, M, (w, h))
+    M = cv2.getRotationMatrix2D(center, 45, 1.0) #Constroi a matriz de rotacao de acordo com o ponto passado, nesse caso o centro
+    rotated = cv2.warpAffine(frame, M, (w, h)) # roda a imagem usando a matriz adiquirida acima
     cv2.imshow('Rotacao do OpenCV',rotated)
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
@@ -78,7 +78,7 @@ while(cap.isOpened()):
     if(i==1110):
         break
     ret, frame = cap.read()
-    rotated = imutils.rotate(frame, 90)
+    rotated = imutils.rotate(frame, 90) #Rotaciona em 90graus usando o imutils
     cv2.imshow('Rotacao do Imutils',rotated)
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
@@ -88,9 +88,9 @@ while(cap.isOpened()):
     if(i==1260):
         break
     ret, frame = cap.read()
-    rotated = imutils.rotate_bound(frame, -45)
-    cv2.imshow('Imutils Bound Rotation',rotated)
-    if cv2.waitKey(30) & 0xFF == ord('q'):
+    rotated = imutils.rotate_bound(frame, -45)# rotaciona usando o imutils com a funcao rotate_bound
+    cv2.imshow('Imutils Bound Rotation',rotated)# que nao deixa perder parte da imagem na rotacao
+    if cv2.waitKey(30) & 0xFF == ord('q'):      # (normalmente corta as bordas em rotacoes normais)
         break
     i+=1
 
@@ -98,8 +98,8 @@ while(cap.isOpened()):
     if(i==1410):
         break
     ret, frame = cap.read()
-    blurred = cv2.GaussianBlur(frame, (11, 11), 0)
-    cv2.imshow('Borrado',blurred)
+    blurred = cv2.GaussianBlur(frame, (11, 11), 0) #Faz com que a imagem fique borrada, utilizado
+    cv2.imshow('Borrado',blurred)               # para reduzir ruidos de alta frequencia
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
     i+=1
@@ -109,9 +109,9 @@ while(cap.isOpened()):
         break
     ret, frame = cap.read()
     output = frame.copy()
-    cv2.rectangle(output, (180, 260), (200, 160), (0, 0, 255), 2)
-    cv2.imshow('Retangulo',output)
-    if cv2.waitKey(30) & 0xFF == ord('q'):
+    cv2.rectangle(output, (180, 260), (200, 160), (0, 0, 255), 2) # desenha um retangulo usando as coordenadas passadas
+    cv2.imshow('Retangulo',output)                                # sendo os parametros passados: imagem vertice 1,
+    if cv2.waitKey(30) & 0xFF == ord('q'):                        # vertice oposto, cor e espessura
         break
     i+=1
 
@@ -120,8 +120,8 @@ while(cap.isOpened()):
         break
     ret, frame = cap.read()
     output = frame.copy()
-    cv2.circle(output, (300, 150), 20, (255, 0, 0), -1)
-    cv2.imshow('Circulo',output)
+    cv2.circle(output, (300, 150), 20, (255, 0, 0), -1) # desenha um circulo com os parametros: imagem,
+    cv2.imshow('Circulo',output)                        # centro, raio, cor e espessura(negativo, preenche o circulo todo)
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
     i+=1
@@ -131,26 +131,26 @@ while(cap.isOpened()):
         break
     ret, frame = cap.read()
     output = frame.copy()
-    cv2.line(output, (60, 20), (400, 200), (0, 0, 255), 5)
-    cv2.imshow('Linha',output)
-    if cv2.waitKey(30) & 0xFF == ord('q'):
+    cv2.line(output, (60, 20), (400, 200), (0, 0, 255), 5)# desenha uma linha com os parametros: imagem
+    cv2.imshow('Linha',output)                            # coordenada de inicio, coordenada de fim,
+    if cv2.waitKey(30) & 0xFF == ord('q'):                # cor e espessura
         break
     i+=1
 
 while(cap.isOpened()):
 
     ret, frame = cap.read()
-    if (not ret):#se nao leu nada, fecha
+    if (not ret):# se nao leu nada, fecha (se nao leu, provavelmente, acabou o video)
         break
-    output = frame.copy()
-    cv2.putText(output, "OpenCV + Dr Stone!!!", (10, 25),
-    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+    output = frame.copy()                               # escreve o texto passado, sendo os parametros:
+    cv2.putText(output, "OpenCV + Dr Stone!!!", (10, 25), # imagem, texto, coordenada de inicio do texto,
+    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)  # font, escala, cor e espessura
     cv2.imshow('Texto',output)
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
 
-cap.release()
-cv2.destroyAllWindows()
+cap.release() #fecha o video
+cv2.destroyAllWindows() #destroi todas as janelas abertas
 
 
 
