@@ -20,7 +20,7 @@ def processando_video(video, tempdest, skip, codec, output):
     #Detectando os rostos na imagens
     while True:
         (sucess, frame) = vs.read() #frame recebe o frame atual e sucess recebe true ou false, se leu ou nao
-        if not sucess:#se nao conseguiu ler
+        if not sucess or read == 20:#se nao conseguiu ler
             break     #para o codigo(normalmente, acaabou o video)
         read += 1 #adiciona que leu mais um
 
@@ -110,7 +110,7 @@ def saveVideo(antigoCaminho, destino, video):
     if newDestino[0] == '/': #tirar / do comeco
         newDestino = newDestino[1:]
                                 #caminho absoluto  #novo destino #nome do Video
-    newLocal = os.path.sep.join([os.getcwd() +     newDestino, "{}-{}.avi".format(nomeVideo,diahora)])
+    newLocal = os.path.sep.join([os.getcwd() +  '/' +  newDestino, "{}-{}.avi".format(nomeVideo,diahora)])
     try:
         os.rename(antigoCaminho, newLocal)#copia o arquivo da temp para o novo destino
         print('Video foi salvo com sucesso! Local do arquivo: {}'.format(newLocal))
@@ -134,7 +134,7 @@ def saveImage(image, destino, pathImage):
     if newDestino[0] == '/': #tirar / do comeco
         newDestino = newDestino[1:]
                              #caminho absoluto  #novo destino #nome do Video
-    local = os.path.sep.join([os.getcwd() +     newDestino,   "{}-{}.png".format(nameImage,diahora)])
+    local = os.path.sep.join([os.getcwd() +  '/' + newDestino,   "{}-{}.png".format(nameImage,diahora)])
     try:
         cv2.imwrite(local, image)#salva a imagem no local passado
         print('A imagem foi salvo com sucesso! Local do arquivo: {}'.format(local))
