@@ -1,4 +1,4 @@
-import cv2, time, imutils
+import cv2, imutils
 
 cap = cv2.VideoCapture('video.avi') # Lendo o video e guardando na variavel cap
 i = 0
