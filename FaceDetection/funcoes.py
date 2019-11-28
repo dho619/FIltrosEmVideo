@@ -20,7 +20,7 @@ def processando_video(video, tempdest, skip, codec, output):
     #Detectando os rostos na imagens
     while True:
         (sucess, frame) = vs.read() #frame recebe o frame atual e sucess recebe true ou false, se leu ou nao
-        if not sucess or read == 20:#se nao conseguiu ler
+        if not sucess:#se nao conseguiu ler
             break     #para o codigo(normalmente, acaabou o video)
         read += 1 #adiciona que leu mais um
 
